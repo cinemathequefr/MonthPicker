@@ -8,6 +8,8 @@ Built upon jQuery UI widget factory (http://api.jqueryui.com/jQuery.widget/).
 
 Dependencies: jQuery, jQuery UI widget factory
 
+Demo: http://cinemathequefr.github.io/MonthPicker/
+
 ## Instantiation
 
 `$(".someElement").monthPicker(options);`
