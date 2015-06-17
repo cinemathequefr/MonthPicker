@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>jquery.monthPicker widget</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.2/normalize.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/foundation/5.5.0/css/foundation.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600,600italic,700,700italic">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Quicksand:300,400,700">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/cycle.css">
+
+    <link rel="stylesheet" href="css/jquery.monthPicker.css">
+    <!-- <link rel="stylesheet" href="css/chroma/chroma-60.css" id="chroma"> -->
+   <style>
+    .monthPicker {
+      position: relative;
+      float: right;
+    }
+
+    .btn-api {
+      display: block; overflow: hidden;
+      max-width: 400px;
+      padding: 4px; margin: 12px 0;
+      background-color: #ccc;
+      cursor: pointer;
+    }
+
+    .btn-api:hover {
+      color: red;
+    }
+
+
+    </style>
+  </head>
+  <body>
+
+    <select id="selectChroma" style="position: fixed; width: 100px; padding: 2px; z-index: 1000;">
+      <option value="" selected="1">Default</option>
+      <option value="0">0°</option>
+      <option value="60">60°</option>
+      <option value="200">200°</option>
+      <option value="230">230°</option>
+    </select>
+
+    <section class="content color revpad" style="min-height: 100%;">
+      <div class="row title-row">
+        <div class="small-12 columns">
+          <a name="seances"></a>
+          <h1>Dans les salles</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="tabs" id="tabs-1">
+          <ul>
+            <li><a href="#films-container">Films</a></li>
+            <li><a href="#calendar-container" class="on">Calendrier</a></li>
+            <div class="monthPicker"></div>
+          </ul>
+          <div class="small-12 columns" style="min-height: 500px;">
+
+            <div class="btn-api" onclick="$('.monthPicker').monthPicker('setDate', '2015-06');">$(".monthPicker").monthPicker("setDate", "2015-06");</div>
+            <div class="btn-api" onclick="$('.monthPicker').monthPicker('setDate', '2008-08');">$(".monthPicker").monthPicker("setDate", "2008-08");</div>
+            <div class="btn-api" onclick="$('.monthPicker').monthPicker('setDate');">$(".monthPicker").monthPicker("setDate");</div>
+            <div class="btn-api" onclick="$('.monthPicker').monthPicker('open');">$(".monthPicker").monthPicker("open");</div>
+            <div class="btn-api" onclick="$('.monthPicker').monthPicker('close');">$(".monthPicker").monthPicker("close");</div>
+            <div class="btn-api" onclick="$('.monthPicker').monthPicker('toggle');">$(".monthPicker").monthPicker("toggle");</div>
+
+
+            <div class="log"></div>
+
+          </div>          
+        </div>
+      </div>
+    </section>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/foundation/5.5.0/js/foundation.min.js"></script>
+    <!--
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.4/hammer.min.js"></script>
+    <script src="js/vendor/jquery.mousewheel.min.js"></script>
+    -->
+    <script src="js/vendor/jquery-ui-widget.js"></script>
+    <script src="js/jquery.monthPicker.js"></script>
+    <script src="js/main.js"></script>
+
+
+    <script>
+    $(function () {
+      var $body = $("body");
+      $("select").on("change", function (e) {
+        var s = $(this).val();
+        $body.fadeTo(150, 0.25, function () {
+          $("#chroma").remove();
+          if (s !== "") {
+            $("head").append("<link rel='stylesheet' href='css/chroma/chroma-" + s + ".css' id='chroma'>");
+          }
+          $body.fadeTo(150, 1);            
+        });
+      });
+    });
+    </script>
+
+
+  </body>
+</html>
+
+

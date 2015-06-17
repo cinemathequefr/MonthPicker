@@ -1,0 +1,40 @@
+/*
+33°/85%/65% = #a66619 => #737311
+33°/75%/75% = #bf7f30 => #8c8c23
+33°/45%/85% = #d9ad77 => #d9d977
+*/
+
+section.content.color, button:hover, .button:hover {
+  background-color: #737311;
+}
+
+.cycle-films a.title, ul.films a.title, .calendar .title, .lede {
+  color: #737311;
+}
+
+.submenu li a.active:after, .submenu li a:hover:after, button, .button, button:focus, .button:focus {
+  background-color: #8c8c23;
+}
+
+h1, h2, .tabs > ul > li.ui-tabs-active, .submenu li a {
+  color: #8c8c23;
+}
+
+.tabs > ul a:hover, .tabs > ul a:active {
+  color: #8c8c23 !important;
+}
+
+.menu ul a:hover, .menu ul a:active, h1.sub, h1 > .sub {
+  color: #d9d977;
+}
+
+.menu ul a.active:after {
+  background-color: #d9d977;
+}
+
+
+/* monthPicker */
+.mp-month td:not(.mp-disabled):not(.mp-selected):hover { background-color: #8c8c23; }
+.mp-month td.mp-selected { background-color: #737311; }
+.mp-prev:not(.mp-disabled):hover, .mp-next:not(.mp-disabled):hover { background-color: #8c8c23; }
+
