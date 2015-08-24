@@ -7,6 +7,7 @@ $.widget("nlte.monthPicker", {
     maxDate: null, // Max date ("yyyy-mm")
     selectedDate: null, // Initially selected date ("yyyy-mm")
     isOpen: false, // Is the widget initially open?
+    mode: "m", // "m": month, "q": quarter
     select: function () {}
   },
 
@@ -60,7 +61,6 @@ $.widget("nlte.monthPicker", {
     this.nowYear = new Date().getFullYear();
     this._setMinMaxDate(this._YM(this.option().minDate), this._YM(this.option().maxDate));
     this.selectedDate = this._validateSelectedDate(this._YM(this.option().selectedDate));
-
 
     // TODO: if no selectedDate and nowYear is out of bounds, visibleYear could be the year closest to nowYear
     this.visibleYear = (this.selectedDate.full === null ? this.nowYear : this.selectedDate.year);

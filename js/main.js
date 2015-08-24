@@ -6,6 +6,7 @@ $(function () {
     selectedDate: "2015-06",
     isOpen: true,
     select: updateSelectedMonth, // NB: `select` event handler
+    mode: "q"
   });
 
   function updateSelectedMonth (e, data) {
