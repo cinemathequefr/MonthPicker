@@ -7,7 +7,7 @@ $.widget("nlte.monthPicker", {
     maxDate: null, // Max date ("yyyy-mm")
     selectedDate: null, // Initially selected date ("yyyy-mm")
     isOpen: false, // Is the widget initially open?
-    mode: "m", // "m": month, "q": quarter
+    selectBy: "month", // "month", "quarter"
     select: function () {}
   },
 
@@ -28,7 +28,7 @@ $.widget("nlte.monthPicker", {
 
     // DOM Bindings
     this._on(false, this.$month, {
-      "click td:not(.mp-disabled)": function (e) {
+      "click tr:not(.mp-disabled)>td:not(.mp-disabled)": function (e) {
         var date = $(e.target).data("date");
         this._setDate(date, e);
         this.close();
@@ -37,10 +37,10 @@ $.widget("nlte.monthPicker", {
 
     this._on(false, $header, {
       "click .mp-prev:not(.mp-disabled)": function () {
-        this._setYear(this.visibleYear - 1);
+          this._setYear(this.visibleYear - 1);
       },
       "click .mp-next:not(.mp-disabled)": function () {
-        this._setYear(this.visibleYear + 1);
+          this._setYear(this.visibleYear + 1);          
       },
       "click .mp-label": this.toggle
     });
@@ -58,9 +58,19 @@ $.widget("nlte.monthPicker", {
 
 
   _init: function () {
+
+    // Selection mode (month or quarter)
+    this.isQuarterMode = (this.option().selectBy === "quarter");
+    this.$calendar.addClass(this.isQuarterMode ? "mp-selectByQuarter" : "mp-selectByMonth");
+
+
     this.nowYear = new Date().getFullYear();
     this._setMinMaxDate(this._YM(this.option().minDate), this._YM(this.option().maxDate));
     this.selectedDate = this._validateSelectedDate(this._YM(this.option().selectedDate));
+
+    if (this.isQuarterMode) {
+      this.selectedDate = this._thisQuarter(this.selectedDate);
+    }
 
     // TODO: if no selectedDate and nowYear is out of bounds, visibleYear could be the year closest to nowYear
     this.visibleYear = (this.selectedDate.full === null ? this.nowYear : this.selectedDate.year);
@@ -72,6 +82,7 @@ $.widget("nlte.monthPicker", {
 
     if (!this.isOpen) {
       this.$calendar.hide();
+    } else {
     }
 
     this._positionCalendar();
@@ -153,6 +164,11 @@ $.widget("nlte.monthPicker", {
       var date = self._YM2(year, i + 1);
       $this.data("date", date);
       $this.html(monthShortNames[date.month]);
+    });
+
+    $t.find(this.isQuarterMode ? "tr" : "td").each(function (i) {
+      var $this = $(this);
+      var date = (self.isQuarterMode ? $this.find("td").eq(0).data("date") : $this.data("date"));
 
       if (self._isEqual(date, self.selectedDate)) {
         $this.addClass("mp-selected");
@@ -172,7 +188,8 @@ $.widget("nlte.monthPicker", {
     this.elemY = this.$header.offset().top;
     this.elemWidth = this.$header.outerWidth();
     this.elemHeight = this.$header.outerHeight();
-    this.$calendar.css({ top: (this.elemY + this.elemHeight) + "px", left: (this.elemX) + "px" }); // Positions the widget under the element
+    // this.$calendar.css({ top: (this.elemY + this.elemHeight) + "px", left: (this.elemX) + "px" }); // Positions the widget under the element
+    this.$calendar.css({ top: (this.elemHeight) + "px", left: (this.elemX) + "px" }); // Positions the widget under the element
   },
 
 
@@ -183,12 +200,22 @@ $.widget("nlte.monthPicker", {
       }
     }
 
+    if (this.isQuarterMode) {
+      minDate = this._thisQuarter(minDate); // Quarter mode: minDate is the beginning of the quarter of the given minDate
+      maxDate = this._thisQuarterEnd(maxDate); // Quarter mode: minDate is the end of the quarter of the given maxDate
+    }
+
     this.minDate = minDate;
     this.maxDate = maxDate;
   },
 
 
   _setDate: function (date, e, noAnim) {
+
+    if (this.isQuarterMode) {
+      date = this._thisQuarter(date);
+    }
+
     if (this._isEqual(date, this.selectedDate) && date.full !== null || this._isOutOfBounds(date)) {
       return;
     }
@@ -261,17 +288,19 @@ $.widget("nlte.monthPicker", {
     }
   },
 
-
   _updateLabelDate: function () {
     var d = this.selectedDate;
 
     if (d.full === null) {
       this.$labelDate.html("");
     } else {
-      this.$labelDate.html(this.option().monthLongNames[d.month] + " " + d.year);
+      if (this.isQuarterMode) {
+        this.$labelDate.html(this.option().monthShortNames[d.month] + "-" + this.option().monthShortNames[d.month + 2] + " " + d.year);        
+      } else {
+        this.$labelDate.html(this.option().monthLongNames[d.month] + " " + d.year);        
+      }
     }
   },
-
 
   _updateLabelYear: function () {
     var year = this.visibleYear;
@@ -363,5 +392,33 @@ $.widget("nlte.monthPicker", {
     }
 
     return (year < (this.minDate.year || undefined) || year > this.maxDate.year || undefined) || false;
+  },
+
+
+  _thisQuarter: function (date) { // Returns the date of the first month (1, 4, 7, 10) of the quarter to which the given date belongs.
+    if (date.full === null) {
+      return date;
+    }
+
+    var m = date.month;
+    return this._YM2(date.year, (m - ((m - 1) % 3)));
+  },
+
+  _thisQuarterEnd: function (date) {
+    if (date.full === null) {
+      return date;
+    }
+
+    var q = this._thisQuarter(date);
+    return this._YM2(q.year, q.month + 2);
   }
+
+
+  // _nextQuarter: function (date) {
+  //   var thisQuarter = this._thisQuarter(date);
+  //   var m = thisQuarter.month + 3;
+  //   return (m === 13 ? this._YM2(thisQuarter.year + 1, 1) : this._YM2(thisQuarter.year, m));
+  // }
+
+
 });
