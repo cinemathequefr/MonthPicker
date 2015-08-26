@@ -98,7 +98,8 @@
   width: 250px; height: 250px;
   background-color: #ccc; color: #222;
   font-family: "Source Sans Pro"; font-size: 0.875rem;
-
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 .mp-month td {
